@@ -1,0 +1,4 @@
+.hamer_tmp/
+hamer_cache/
+__pycache__/
+*.mp4
