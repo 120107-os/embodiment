@@ -185,6 +185,12 @@
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
             
+            if (window.innerWidth <= 768) {
+                model.scale.set(0.5, 0.5, 0.5);
+                model.position.y += 40;
+                model.position.x -= 20;
+            }
+            
             scene.add(model);
 
             // Restore bounding cube around the entire model
