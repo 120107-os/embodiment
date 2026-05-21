@@ -1,4 +1,4 @@
-# embodiment
+# embodiment 🫲🫱
 
 multi-versioned generative art.
 
