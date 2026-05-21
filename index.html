@@ -158,6 +158,9 @@
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        // Important for accurate glassy rendering:
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
         document.body.appendChild(renderer.domElement);
 
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -209,13 +212,15 @@
                     child.material = new THREE.MeshPhysicalMaterial({
                         color: 0xffffff,
                         vertexColors: true,
-                        metalness: 0.3,
-                        roughness: 0.1,
-                        transmission: 0.85, // Glassy transparency
-                        ior: 1.5, // Index of refraction (glass)
-                        thickness: 2.0, // Subsurface volume thickness
+                        metalness: 0.2,
+                        roughness: 0.05,
+                        transmission: 0.95, // glassy hyperliquid transparency
+                        ior: 1.5,
+                        thickness: 2.0, // refraction volume
                         clearcoat: 1.0,
-                        clearcoatRoughness: 0.1
+                        clearcoatRoughness: 0.1,
+                        iridescence: 0.3, // slight rainbow liquid effect
+                        transparent: true
                     });
                     
                     // Assign random rotation axis
