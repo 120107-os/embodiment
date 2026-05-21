@@ -1,17 +1,6 @@
-# embodiment 🫲🫱
+# embodiment 
 
-multi-versioned generative art.
-
-## versions
-
-- **[v1]**: spatial matrix of neural-extracted hand geometry.
-
-## usage
-
-```bash
-python3 -m http.server 8000
-```
-view at `http://localhost:8000/index.html`
+A spatial domain over neural-extracted hand geometry 🤞 🌌 ⛩️
 
 ## architecture
 
