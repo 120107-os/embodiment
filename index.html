@@ -39,10 +39,19 @@
             bottom: 2rem;
             left: 2rem;
             display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            user-select: none;
+            max-width: 400px;
+            pointer-events: auto;
+        }
+
+        .title-row {
+            display: flex;
             align-items: baseline;
             gap: 1rem;
             pointer-events: none;
-            user-select: none;
         }
 
         #ui-bottom-left .major {
@@ -58,6 +67,27 @@
             font-weight: 300;
             letter-spacing: 0.1em;
             opacity: 0.5;
+        }
+
+        .description-box {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(0, 0, 0, 0.4);
+            max-height: 0;
+            padding: 0 1rem;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        #ui-bottom-left:hover .description-box {
+            max-height: 200px;
+            padding: 1rem;
+            opacity: 1;
         }
 
         #ui-right {
@@ -91,8 +121,13 @@
     <div id="loading">awakening...</div>
 
     <div id="ui-bottom-left">
-        <div class="major">embodiment</div>
-        <div class="minor">version 1.0</div>
+        <div class="title-row">
+            <div class="major">embodiment</div>
+            <div class="minor">version 1.0</div>
+        </div>
+        <div class="description-box">
+            <i>embodiment</i> mathematically reconstructs the physical hands of carb1n into a reactive digital void, inspired by Mahito's "Self-Embodiment of Perfection". The artwork utilizes the scale of a Vision Transformer (HaMeR) to extract the "shape of the soul" from 2D video, projecting it into WebGL through the fully differentiable MANO anatomical framework.
+        </div>
     </div>
 
     <div id="ui-right">
