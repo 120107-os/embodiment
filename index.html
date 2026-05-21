@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>embodiment 🫲🫱</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
         body { 
             margin: 0; 
@@ -35,45 +34,6 @@
             100% { opacity: 0.1; }
         }
 
-        #magic-text {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-weight: 400;
-            color: #ffffff;
-            line-height: 1.5;
-            user-select: none;
-            z-index: 10;
-        }
-
-        .magic-line {
-            opacity: 0.1;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-            padding: 0.5rem 0; /* invisible bounding box */
-            display: block;
-            text-transform: lowercase;
-        }
-
-        .magic-line:hover {
-            opacity: 1;
-        }
-
-        .pixel-particle {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            pointer-events: none;
-            z-index: 9999;
-            animation: pixelFade 0.6s linear forwards;
-        }
-
-        @keyframes pixelFade {
-            0% { opacity: 1; transform: scale(1) translateY(0); }
-            100% { opacity: 0; transform: scale(0) translateY(10px); }
-        }
 
         #ui-bottom-left {
             position: absolute;
@@ -161,11 +121,7 @@
 <body>
     <div id="loading">awakening...</div>
 
-    <div id="magic-text">
-        <div class="magic-line">pale hands in the dark</div>
-        <div class="magic-line">flesh becomes geometry</div>
-        <div class="magic-line">shape of the soul wakes</div>
-    </div>
+
 
     <div id="ui-bottom-left">
         <div class="title-row">
@@ -207,20 +163,7 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
 
-        // Pixel Trail Logic for Magic Text
-        const palette = ["#141215", "#e3cfb0", "#e36c1c", "#000000", "#70779e", "#c3d0ed", "#ffffff", "#ad3a00", "#4b3d31", "#451200", "#846d55", "#b79e80", "#a4a9bf", "#38416f", "#f9f2ea"];
-        document.querySelectorAll('.magic-line').forEach(line => {
-            line.addEventListener('mousemove', (e) => {
-                if (Math.random() > 0.5) return; // Add slight gap between pixels
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel-particle';
-                pixel.style.left = (e.clientX + (Math.random() * 20 - 10)) + 'px';
-                pixel.style.top = (e.clientY + (Math.random() * 20 - 10)) + 'px';
-                pixel.style.backgroundColor = palette[Math.floor(Math.random() * palette.length)];
-                document.body.appendChild(pixel);
-                setTimeout(() => pixel.remove(), 600);
-            });
-        });
+
 
         // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
