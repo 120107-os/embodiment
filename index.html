@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>embodiment 🫲🫱</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body { 
             margin: 0; 
@@ -32,6 +33,35 @@
             0% { opacity: 0.1; }
             50% { opacity: 0.4; }
             100% { opacity: 0.1; }
+        }
+
+        #magic-text {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: #ffffff;
+            opacity: 0;
+            line-height: 1.5;
+            pointer-events: auto;
+            transition: opacity 2s ease-out;
+            user-select: none;
+            z-index: 10;
+        }
+
+        #magic-text:hover {
+            animation: flicker 0.5s forwards;
+            transition: none;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0; }
+            20% { opacity: 0.8; }
+            40% { opacity: 0.2; }
+            60% { opacity: 1; }
+            80% { opacity: 0.5; }
+            100% { opacity: 0.8; }
         }
 
         #ui-bottom-left {
@@ -119,6 +149,12 @@
 </head>
 <body>
     <div id="loading">awakening...</div>
+
+    <div id="magic-text">
+        Pale hands in the dark,<br>
+        Flesh becomes geometry,<br>
+        Shape of the soul wakes.
+    </div>
 
     <div id="ui-bottom-left">
         <div class="title-row">
