@@ -148,6 +148,7 @@
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -158,6 +159,9 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
+
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -205,11 +209,11 @@
                     child.material = new THREE.MeshPhysicalMaterial({
                         color: 0xffffff,
                         vertexColors: true,
-                        metalness: 0.2,
-                        roughness: 0.15,
-                        transmission: 0.95, // Glassy transparency
-                        ior: 1.33, // Index of refraction (water/liquid)
-                        thickness: 2.5, // Subsurface volume thickness
+                        metalness: 0.3,
+                        roughness: 0.1,
+                        transmission: 0.85, // Glassy transparency
+                        ior: 1.5, // Index of refraction (glass)
+                        thickness: 2.0, // Subsurface volume thickness
                         clearcoat: 1.0,
                         clearcoatRoughness: 0.1
                     });
