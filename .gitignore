@@ -6,3 +6,4 @@ __pycache__/
 sapiens_cache/
 h01_meshes/
 .DS_Store
+.vercel
