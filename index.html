@@ -202,11 +202,16 @@
             // Process meshes
             model.traverse((child) => {
                 if (child.isMesh && child.name.startsWith('hand')) {
-                    child.material = new THREE.MeshStandardMaterial({
+                    child.material = new THREE.MeshPhysicalMaterial({
                         color: 0xffffff,
                         vertexColors: true,
-                        metalness: 0.1,
-                        roughness: 0.4
+                        metalness: 0.2,
+                        roughness: 0.15,
+                        transmission: 0.95, // Glassy transparency
+                        ior: 1.33, // Index of refraction (water/liquid)
+                        thickness: 2.5, // Subsurface volume thickness
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.1
                     });
                     
                     // Assign random rotation axis
