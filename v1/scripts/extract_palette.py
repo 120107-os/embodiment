@@ -59,10 +59,10 @@ def extract_colors(video_path, num_colors=15):
     return hex_colors
 
 if __name__ == "__main__":
-    video_path = "chinatown-palette-1.mp4"
+    video_path = "hands-dance.mp4"
     print(f"Extracting colors from {video_path}...")
     palette = extract_colors(video_path, 15)
     print("Extracted Palette:")
     print(palette)
-    with open("palette.json", "w") as f:
+    with open("v1/palette.json", "w") as f:
         json.dump(palette, f)
