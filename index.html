@@ -206,11 +206,18 @@
 
             // Process meshes
             const palette = ["#141215", "#e3cfb0", "#e36c1c", "#000000", "#70779e", "#c3d0ed", "#ffffff", "#ad3a00", "#4b3d31", "#451200", "#846d55", "#b79e80", "#a4a9bf", "#38416f", "#f9f2ea"];
+            // Shuffle palette for randomized 1:1 mapping
+            for (let i = palette.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [palette[i], palette[j]] = [palette[j], palette[i]];
+            }
+            let colorIndex = 0;
             model.traverse((child) => {
                 if (child.isMesh && child.name.startsWith('hand')) {
-                    const randomColor = palette[Math.floor(Math.random() * palette.length)];
+                    const mappedColor = palette[colorIndex % palette.length];
+                    colorIndex++;
                     child.material = new THREE.MeshStandardMaterial({
-                        color: new THREE.Color(randomColor),
+                        color: new THREE.Color(mappedColor),
                         vertexColors: false,
                         metalness: 0.1,
                         roughness: 0.4
