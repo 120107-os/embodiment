@@ -218,17 +218,16 @@
                     const randomColor = palette[Math.floor(Math.random() * palette.length)];
                     child.material = new THREE.MeshPhysicalMaterial({
                         color: new THREE.Color(randomColor),
-                        emissive: 0x111111,
+                        emissive: new THREE.Color(randomColor).multiplyScalar(0.3),
                         vertexColors: false,
-                        metalness: 0.6,
-                        roughness: 0.1,
-                        transmission: 0.5, // lower transmission prevents blending into black bg
-                        ior: 1.5,
-                        thickness: 2.0, // refraction volume
+                        metalness: 0.7,
+                        roughness: 0.05,
                         clearcoat: 1.0,
-                        clearcoatRoughness: 0.1,
-                        iridescence: 0.5, // stronger rainbow liquid effect
-                        transparent: true
+                        clearcoatRoughness: 0.05,
+                        iridescence: 0.4,
+                        transparent: true,
+                        opacity: 0.8,
+                        side: THREE.DoubleSide
                     });
                     
                     // Assign random rotation axis
