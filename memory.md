@@ -1,0 +1,1 @@
+- simplify changelogs with each push/commit
