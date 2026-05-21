@@ -59,19 +59,26 @@ def extract_video_frames(video_bytes: bytes, frame_count: int) -> list[tuple[int
         tmp_video_path = tmp_video.name
 
     cap = cv2.VideoCapture(tmp_video_path)
+    import numpy as np
+    
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+    if frame_count > 0 and frame_count < total_frames:
+        target_indices = set(np.linspace(0, total_frames - 1, frame_count, dtype=int))
+    else:
+        target_indices = set(range(total_frames))
     
     frames = []
     idx = 0
     while cap.isOpened():
-        if frame_count > 0 and idx >= frame_count:
-            break
         success, img = cap.read()
         if not success:
             break
             
-        success, img_encoded = cv2.imencode('.jpg', img)
-        if success:
-            frames.append((idx, img_encoded.tobytes()))
+        if idx in target_indices:
+            success, img_encoded = cv2.imencode('.jpg', img)
+            if success:
+                frames.append((idx, img_encoded.tobytes()))
         idx += 1
         
     cap.release()
@@ -221,11 +228,12 @@ class HamerPredictor:
                 # Convert vertices & faces to Trimesh 
                 tmesh = self.renderer.vertices_to_trimesh(verts, camera_translation, (1, 1, 1), is_right=is_right_hand)
                 
-                # Export watertight mesh to OBJ byte string
+                # Export watertight mesh to OBJ and PLY byte string
                 obj_bytes = trimesh.exchange.obj.export_obj(tmesh).encode('utf-8')
+                ply_bytes = trimesh.exchange.ply.export_ply(tmesh)
                 
                 person_id = int(batch['personid'][n])
-                meshes.append((person_id, is_right_hand, obj_bytes))
+                meshes.append((person_id, is_right_hand, obj_bytes, ply_bytes))
                 
         return frame_idx, meshes
 
@@ -259,10 +267,13 @@ def main(video_path: str = "input_hand_video.mp4", out_dir: str = "hamer_cache",
     os.makedirs(out_dir, exist_ok=True)
     
     for frame_idx, meshes in results:
-        for person_id, is_right_hand, mesh_bytes in meshes:
+        for person_id, is_right_hand, obj_bytes, ply_bytes in meshes:
             hand_type = "right" if is_right_hand else "left"
-            filename = f"mesh_{frame_idx:04d}_{hand_type}_{person_id}.obj"
-            with open(os.path.join(out_dir, filename), "wb") as f:
-                f.write(mesh_bytes)
+            obj_filename = f"mesh_{frame_idx:04d}_{hand_type}_{person_id}.obj"
+            ply_filename = f"mesh_{frame_idx:04d}_{hand_type}_{person_id}.ply"
+            with open(os.path.join(out_dir, obj_filename), "wb") as f:
+                f.write(obj_bytes)
+            with open(os.path.join(out_dir, ply_filename), "wb") as f:
+                f.write(ply_bytes)
             
     print(f"Successfully generated anatomically correct MANO meshes to {out_dir}/")

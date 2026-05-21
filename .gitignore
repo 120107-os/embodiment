@@ -2,3 +2,7 @@
 hamer_cache/
 __pycache__/
 *.mp4
+*.glb
+sapiens_cache/
+h01_meshes/
+.DS_Store
