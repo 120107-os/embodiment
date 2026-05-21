@@ -7,7 +7,7 @@ image = (
     modal.Image.debian_slim()
     .uv_pip_install("numpy", "trimesh", "scipy")
     .add_local_dir("hamer_cache", remote_path="/hamer_cache")
-    .add_local_file("palette.json", remote_path="/palette.json")
+    .add_local_file("v1/palette.json", remote_path="/palette.json")
 )
 
 app = modal.App("multihand-scene")
