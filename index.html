@@ -4,61 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>embodiment 🫲🫱</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            background-color: #000;
-            color: #fff;
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #000; 
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            color: #ffffff;
         }
-        h1 {
+        canvas { display: block; width: 100vw; height: 100vh; }
+        
+        #loading {
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            font-weight: 300; 
+            font-size: 14px;
+            letter-spacing: 0.4em;
+            text-transform: lowercase;
+            opacity: 0.3;
+            transition: opacity 1.5s ease-out;
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.1; }
+        }
+
+        #ui-bottom-left {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #ui-bottom-left .major {
+            font-size: 24px;
             font-weight: 300;
             letter-spacing: 0.1em;
             text-transform: lowercase;
-            margin-bottom: 2rem;
-            font-size: 24px;
             opacity: 0.9;
         }
-        .gallery {
+
+        #ui-bottom-left .minor {
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+        }
+
+        #ui-right {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            width: 300px;
-        }
-        a {
-            display: block;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            text-decoration: none;
-            text-transform: lowercase;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        a:hover {
-            border-color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        .version {
-            font-weight: 600;
-            margin-right: 0.5rem;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 18px;
+            font-weight: 300;
+            opacity: 0.7;
+            pointer-events: none;
+            user-select: none;
         }
     </style>
+    <!-- Import Three.js -->
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1>embodiment 🫲🫱</h1>
-    <div class="gallery">
-        <a href="v1/index.html">
-            <span class="version">enter</span>
-        </a>
+    <div id="loading">awakening...</div>
+
+    <div id="ui-bottom-left">
+        <div class="major">embodiment</div>
+        <div class="minor">version 1.0</div>
     </div>
+
+    <div id="ui-right">
+        <div>こ</div>
+        <div>れ</div>
+        <div>が</div>
+        <div style="margin-top: 0.2rem;">⋮</div>
+        <div style="margin-bottom: 0.2rem;">⋮</div>
+        <div style="position: relative;">死<span style="position: absolute; left: 100%; top: -0.2em; font-size: 0.7em;">﹅</span></div>
+        <div>か</div>
+        <div>？</div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        camera.position.set(0, 0, 250);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(100, 200, 50);
+        scene.add(dirLight);
+
+        const hands = [];
+        const loader = new GLTFLoader();
+
+        loader.load('v1/scene.glb', (gltf) => {
+            document.getElementById('loading').style.display = 'none';
+            
+            const model = gltf.scene;
+            
+            // Center the model
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+            
+            scene.add(model);
+
+            // Restore bounding cube around the entire model
+            const boxHelper = new THREE.BoxHelper(model, 0xffffff);
+            boxHelper.material.opacity = 0.5;
+            boxHelper.material.transparent = true;
+            scene.add(boxHelper);
+
+            // Process meshes
+            model.traverse((child) => {
+                if (child.isMesh && child.name.startsWith('hand')) {
+                    child.material = new THREE.MeshStandardMaterial({
+                        color: 0xffffff,
+                        vertexColors: true,
+                        metalness: 0.1,
+                        roughness: 0.4
+                    });
+                    
+                    // Assign random rotation axis
+                    child.userData.axis = new THREE.Vector3(
+                        Math.random() - 0.5,
+                        Math.random() - 0.5,
+                        Math.random() - 0.5
+                    ).normalize();
+                    
+                    hands.push(child);
+                }
+            });
+
+        }, undefined, (error) => {
+            console.error('Error loading scene.glb:', error);
+            document.getElementById('loading').innerText = "Error loading scene.glb. Make sure to run `python3 -m http.server`";
+        });
+
+        // The physics interaction logic
+        // When user interacts (camera changes), rotate hands in random off-directions
+        let isDragging = false;
+        
+        controls.addEventListener('start', () => { isDragging = true; });
+        controls.addEventListener('end', () => { isDragging = false; });
+        
+        controls.addEventListener('change', () => {
+            if (isDragging) {
+                // Apply minor rotation to each hand
+                hands.forEach(hand => {
+                    hand.rotateOnAxis(hand.userData.axis, 0.05);
+                });
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Required for damping
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
