@@ -37,19 +37,45 @@
             position: absolute; 
             top: 50%; left: 50%; 
             transform: translate(-50%, -50%);
-            font-weight: 300; 
-            font-size: 14px;
-            letter-spacing: 0.4em;
-            text-transform: lowercase;
-            opacity: 0.3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: opacity 1.5s ease-out;
-            animation: pulse 3s infinite;
+            pointer-events: none;
         }
-        
-        @keyframes pulse {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.1; }
+
+        .carbon-ring {
+            width: 48px;
+            height: 48px;
+            position: relative;
+            animation: spin 1.2s steps(12, end) infinite;
+        }
+
+        .atom {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background-color: #ffffff;
+        }
+
+        .atom:nth-child(1)  { transform: translate(-50%, -50%) rotate(0deg)   translate(16px); opacity: 1.0; }
+        .atom:nth-child(2)  { transform: translate(-50%, -50%) rotate(30deg)  translate(16px); opacity: 0.9; }
+        .atom:nth-child(3)  { transform: translate(-50%, -50%) rotate(60deg)  translate(16px); opacity: 0.8; }
+        .atom:nth-child(4)  { transform: translate(-50%, -50%) rotate(90deg)  translate(16px); opacity: 0.7; }
+        .atom:nth-child(5)  { transform: translate(-50%, -50%) rotate(120deg) translate(16px); opacity: 0.6; }
+        .atom:nth-child(6)  { transform: translate(-50%, -50%) rotate(150deg) translate(16px); opacity: 0.5; }
+        .atom:nth-child(7)  { transform: translate(-50%, -50%) rotate(180deg) translate(16px); opacity: 0.4; }
+        .atom:nth-child(8)  { transform: translate(-50%, -50%) rotate(210deg) translate(16px); opacity: 0.3; }
+        .atom:nth-child(9)  { transform: translate(-50%, -50%) rotate(240deg) translate(16px); opacity: 0.2; }
+        .atom:nth-child(10) { transform: translate(-50%, -50%) rotate(270deg) translate(16px); opacity: 0.15; }
+        .atom:nth-child(11) { transform: translate(-50%, -50%) rotate(300deg) translate(16px); opacity: 0.1; }
+        .atom:nth-child(12) { transform: translate(-50%, -50%) rotate(330deg) translate(16px); opacity: 0.05; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
 
@@ -139,7 +165,13 @@
 <body>
     <a href="https://120107.cloud" id="global-logo">12.0107</a>
 
-    <div id="loading">awakening...</div>
+    <div id="loading">
+        <div class="carbon-ring">
+            <div class="atom"></div><div class="atom"></div><div class="atom"></div><div class="atom"></div>
+            <div class="atom"></div><div class="atom"></div><div class="atom"></div><div class="atom"></div>
+            <div class="atom"></div><div class="atom"></div><div class="atom"></div><div class="atom"></div>
+        </div>
+    </div>
 
 
 
