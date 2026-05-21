@@ -149,7 +149,6 @@
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -159,13 +158,7 @@
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        // Important for accurate glassy rendering:
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.0;
         document.body.appendChild(renderer.domElement);
-
-        const pmremGenerator = new THREE.PMREMGenerator(renderer);
-        scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -216,18 +209,11 @@
             model.traverse((child) => {
                 if (child.isMesh && child.name.startsWith('hand')) {
                     const randomColor = palette[Math.floor(Math.random() * palette.length)];
-                    child.material = new THREE.MeshPhysicalMaterial({
+                    child.material = new THREE.MeshStandardMaterial({
                         color: new THREE.Color(randomColor),
-                        emissive: new THREE.Color(randomColor).multiplyScalar(0.3),
                         vertexColors: false,
-                        metalness: 0.7,
-                        roughness: 0.05,
-                        clearcoat: 1.0,
-                        clearcoatRoughness: 0.05,
-                        iridescence: 0.4,
-                        transparent: true,
-                        opacity: 0.8,
-                        side: THREE.DoubleSide
+                        metalness: 0.1,
+                        roughness: 0.4
                     });
                     
                     // Assign random rotation axis
