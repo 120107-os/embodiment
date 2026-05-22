@@ -169,6 +169,29 @@
         #github-link:hover {
             opacity: 1;
         }
+
+        #ar-button {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            backdrop-filter: blur(4px);
+            z-index: 100;
+        }
+        #ar-button.visible {
+            display: flex;
+        }
     </style>
     <!-- Import Three.js -->
     <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
@@ -180,6 +203,12 @@
             }
         }
     </script>
+    
+    <!-- Vercel Analytics -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
     <a href="https://120107.cloud" id="global-logo">12.0107</a>
@@ -221,10 +250,27 @@
         </svg>
     </a>
 
+    <a id="ar-button" rel="ar" href="v1/scene.usdz">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span>VIEW IN SPACE</span>
+    </a>
+
     <script type="module">
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
+        import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+        // Show AR button on iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+            document.getElementById('ar-button').classList.add('visible');
+        }
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -239,6 +285,20 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
+
+        // Post-Processing
+        const composer = new EffectComposer(renderer);
+        const renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const ssaoPass = new SSAOPass(scene, camera, window.innerWidth, window.innerHeight);
+        ssaoPass.kernelRadius = 16;
+        ssaoPass.minDistance = 0.005;
+        ssaoPass.maxDistance = 0.1;
+        composer.addPass(ssaoPass);
+
+        const outputPass = new OutputPass();
+        composer.addPass(outputPass);
 
 
 
@@ -255,8 +315,11 @@
 
         const hands = [];
         const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/');
+        loader.setDRACOLoader(dracoLoader);
 
-        loader.load('v1/scene.glb', (gltf) => {
+        loader.load('v1/scene_draco.glb', (gltf) => {
             document.getElementById('loading').style.display = 'none';
             
             const model = gltf.scene;
@@ -341,13 +404,15 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+            ssaoPass.setSize(window.innerWidth, window.innerHeight);
         });
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
             controls.update(); // Required for damping
-            renderer.render(scene, camera);
+            composer.render();
         }
         animate();
     </script>
